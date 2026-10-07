@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>LorryMitra AI — നിങ്ങളുടെ ലോജിസ്റ്റിക്സ് സഹായി | Kerala Logistics AI Assistant</title>
+    <meta name="description" content="AI-powered bilingual Malayalam-English logistics assistant for Kerala lorry drivers, fleet operators, and transport contractors. Understand E-Way Bills, invoices, and delivery notes in simple Malayalam." />
+    <meta name="theme-color" content="#0B2545" />
+
+    <!-- Google Fonts: Inter, Outfit, and Noto Sans Malayalam -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Malayalam:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN with configuration -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              lorry: {
+                navy: '#0B2545',
+                dark: '#07162C',
+                blue: '#133E87',
+                bright: '#1D4ED8',
+                sky: '#60A5FA',
+                ice: '#EEF4FF',
+                accent: '#059669',
+                warning: '#D97706',
+                danger: '#DC2626',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'Noto Sans Malayalam', 'sans-serif'],
+              display: ['Outfit', 'Noto Sans Malayalam', 'sans-serif'],
+              malayalam: ['Noto Sans Malayalam', 'sans-serif'],
+            },
+            animation: {
+              'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'bounce-gentle': 'bounce 2s infinite',
+              'shimmer': 'shimmer 2s infinite linear',
+            },
+            keyframes: {
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans min-h-screen selection:bg-blue-600 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
