@@ -13,10 +13,12 @@ import {
   Info,
   Clock,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  LogOut,
+  User
 } from 'lucide-react';
 
-export function Sidebar({ currentTab, setCurrentTab, t, activeDoc, onStartDemo, onOpenSettings }) {
+export function Sidebar({ currentTab, setCurrentTab, t, activeDoc, onStartDemo, onOpenSettings, user, onLogout }) {
   const navItems = [
     { id: 'dashboard', label: t.navDashboard, icon: LayoutDashboard },
     { id: 'documents', label: t.navDocuments, icon: FileText },
@@ -108,6 +110,27 @@ export function Sidebar({ currentTab, setCurrentTab, t, activeDoc, onStartDemo, 
             <p className="text-xs font-mono font-bold text-slate-900 truncate">{activeDoc.vehicleNumber}</p>
             <p className="text-[11px] text-slate-500 truncate mt-0.5">{activeDoc.documentType}</p>
           </div>
+
+          {user && (
+            <div className="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+              <div className="flex items-center space-x-2 truncate">
+                <div className="w-7 h-7 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  {user.name ? user.name[0].toUpperCase() : 'U'}
+                </div>
+                <div className="truncate">
+                  <p className="text-xs font-bold text-slate-800 font-ml truncate">{user.name}</p>
+                  <p className="text-[10px] text-slate-400 capitalize truncate">{user.role || 'Driver'}</p>
+                </div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                title={t.logout || "Logout"}
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           <button
             onClick={onOpenSettings}

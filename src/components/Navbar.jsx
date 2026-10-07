@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   Truck, 
   Languages, 
@@ -9,7 +8,8 @@ import {
   ShieldCheck, 
   Menu, 
   X,
-  Volume2
+  Volume2,
+  LogOut
 } from 'lucide-react';
 
 export function Navbar({
@@ -25,7 +25,9 @@ export function Navbar({
   onOpenAuth,
   activeDoc,
   mobileMenuOpen,
-  setMobileMenuOpen
+  setMobileMenuOpen,
+  user,
+  onLogout
 }) {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
@@ -127,6 +129,39 @@ export function Navbar({
             >
               <Settings className="w-5 h-5" />
             </button>
+
+            {/* Auth / Profile & Logout */}
+            {user ? (
+              <div className="flex items-center space-x-1 sm:space-x-2 pl-1 border-l border-slate-200">
+                <div 
+                  onClick={onOpenSettings}
+                  className="hidden md:flex items-center space-x-2 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 cursor-pointer transition-colors"
+                  title="User Profile"
+                >
+                  <div className="w-6 h-6 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs font-bold">
+                    {user.name ? user.name[0].toUpperCase() : 'U'}
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 font-ml truncate max-w-[90px]">
+                    {user.name}
+                  </span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  title={t.logout || "Logout"}
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center space-x-1 shadow-xs transition-all active:scale-95"
+              >
+                <User className="w-4 h-4" />
+                <span>{t.login}</span>
+              </button>
+            )}
 
             {/* Mobile Hamburger Menu Toggle */}
             <button

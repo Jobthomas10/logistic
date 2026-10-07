@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './utils/supabase';
 import { translations } from './data/translations';
 import { sampleDocuments } from './data/sampleDocuments';
 import { Navbar } from './components/Navbar';
@@ -19,6 +20,16 @@ import { DemoTourModal } from './components/DemoTourModal';
 import { SettingsModal } from './components/SettingsModal';
 import { AuthModal } from './components/AuthModal';
 import { 
+  getCurrentUser, 
+  getUserProfile, 
+  signOut, 
+  onAuthStateChange 
+} from './services/authService';
+import { 
+  fetchUserDocuments, 
+  saveDocument 
+} from './services/documentService';
+import { 
   FileText, 
   Sparkles, 
   Truck, 
@@ -34,7 +45,7 @@ export function App() {
   const [lang, setLang] = useState('ml');
   const t = translations[lang] || translations.ml;
 
-  // Documents state
+  // Documents state: Initialized with sample documents (Demo Data)
   const [documents, setDocuments] = useState(sampleDocuments);
   const [activeDoc, setActiveDoc] = useState(sampleDocuments[0]);
 
@@ -48,22 +59,106 @@ export function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // User state
+  // Authenticated User state
   const [user, setUser] = useState({
+    id: "guest-driver-001",
     name: "Biju Kumar",
+    email: "biju.driver@lorrymitra.ai",
     phone: "+91 94471 23456",
-    role: "driver"
+    role: "driver",
+    company_name: "Kerala Goods Transport"
   });
 
-  // Handle new document processed from upload
-  const handleDocumentProcessed = (newOrLoadedDoc) => {
-    setActiveDoc(newOrLoadedDoc);
-    // Ensure it exists in document history
-    if (!documents.some(d => d.id === newOrLoadedDoc.id)) {
-      setDocuments([newOrLoadedDoc, ...documents]);
+  // Supabase Auth Listener & User Data Fetching
+  useEffect(() => {
+    async function initAuth() {
+      const authUser = await getCurrentUser();
+      if (authUser) {
+        const profile = await getUserProfile(authUser.id);
+        const userData = {
+          id: authUser.id,
+          name: profile?.name || authUser.user_metadata?.name || 'Driver',
+          email: authUser.email,
+          phone: profile?.phone || authUser.user_metadata?.phone || '',
+          role: profile?.role || authUser.user_metadata?.role || 'driver',
+          company_name: profile?.company_name || authUser.user_metadata?.company_name || ''
+        };
+        setUser(userData);
+        loadUserDocuments(authUser.id);
+      }
     }
-    // Switch to documents tab or dashboard to view extracted results
+
+    initAuth();
+
+    const subscription = onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        const profile = await getUserProfile(session.user.id);
+        const userData = {
+          id: session.user.id,
+          name: profile?.name || session.user.user_metadata?.name || 'Driver',
+          email: session.user.email,
+          phone: profile?.phone || session.user.user_metadata?.phone || '',
+          role: profile?.role || session.user.user_metadata?.role || 'driver',
+          company_name: profile?.company_name || session.user.user_metadata?.company_name || ''
+        };
+        setUser(userData);
+        loadUserDocuments(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setDocuments(sampleDocuments);
+        setActiveDoc(sampleDocuments[0]);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe?.();
+    };
+  }, []);
+
+  // Fetch documents belonging to user from Supabase
+  const loadUserDocuments = async (userId) => {
+    if (!userId) return;
+    try {
+      const userDocs = await fetchUserDocuments(userId);
+      if (userDocs && userDocs.length > 0) {
+        // User has real documents! Merge or display user documents
+        setDocuments(userDocs);
+        setActiveDoc(userDocs[0]);
+      } else {
+        // Retain demo documents as fallback
+        setDocuments(sampleDocuments);
+        setActiveDoc(sampleDocuments[0]);
+      }
+    } catch (e) {
+      console.warn('Load user documents notice:', e);
+    }
+  };
+
+  // Handle new document processed from upload
+  const handleDocumentProcessed = async (newOrLoadedDoc) => {
+    setActiveDoc(newOrLoadedDoc);
+    
+    // Prepend to current list
+    setDocuments(prev => {
+      const filtered = prev.filter(d => d.id !== newOrLoadedDoc.id);
+      return [newOrLoadedDoc, ...filtered];
+    });
+
+    // Save to Supabase
+    if (user?.id) {
+      saveDocument(newOrLoadedDoc, user.id);
+    }
+
+    // Switch to documents tab to view extracted results
     setCurrentTab('documents');
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setUser(null);
+    setDocuments(sampleDocuments);
+    setActiveDoc(sampleDocuments[0]);
+    setCurrentTab('dashboard');
   };
 
   const handleStartDemo = () => {
@@ -79,6 +174,7 @@ export function App() {
           doc={activeDoc} 
           t={t} 
           lang={lang} 
+          user={user}
           onExitDriverMode={() => {
             setDriverMode(false);
             setCurrentTab('dashboard');
@@ -122,6 +218,8 @@ export function App() {
           activeDoc={activeDoc}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
+          user={user}
+          onLogout={handleLogout}
         />
         <LandingPage 
           onEnterApp={() => setCurrentTab('dashboard')} 
@@ -147,7 +245,10 @@ export function App() {
         <AuthModal
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
-          onLoginSuccess={(u) => setUser(u)}
+          onLoginSuccess={(u) => {
+            setUser(u);
+            if (u?.id) loadUserDocuments(u.id);
+          }}
           t={t}
           lang={lang}
         />
@@ -173,6 +274,8 @@ export function App() {
         activeDoc={activeDoc}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
+        user={user}
+        onLogout={handleLogout}
       />
 
       {/* Mobile Drawer Navigation if toggled */}
@@ -248,6 +351,8 @@ export function App() {
             activeDoc={activeDoc}
             onStartDemo={handleStartDemo}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            user={user}
+            onLogout={handleLogout}
           />
         </div>
 
@@ -276,6 +381,7 @@ export function App() {
                 onDocumentProcessed={handleDocumentProcessed}
                 t={t}
                 lang={lang}
+                user={user}
               />
 
               {activeDoc && (
@@ -304,6 +410,7 @@ export function App() {
                 doc={activeDoc}
                 t={t}
                 lang={lang}
+                user={user}
               />
             </div>
           )}
@@ -392,7 +499,10 @@ export function App() {
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onLoginSuccess={(u) => setUser(u)}
+        onLoginSuccess={(u) => {
+          setUser(u);
+          if (u?.id) loadUserDocuments(u.id);
+        }}
         t={t}
         lang={lang}
       />

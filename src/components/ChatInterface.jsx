@@ -12,9 +12,9 @@ import {
   CornerDownLeft,
   Trash2
 } from 'lucide-react';
-import { askDocumentAI, speakText, stopSpeech, startVoiceRecognition } from '../services/aiService';
+import { askDocumentAI, speakText, stopSpeech, startVoiceRecognition, logQueryToSupabase } from '../services/aiService';
 
-export function ChatInterface({ doc, t, lang }) {
+export function ChatInterface({ doc, t, lang, user }) {
   const [messages, setMessages] = useState([
     {
       id: 'm-init',
@@ -64,6 +64,11 @@ export function ChatInterface({ doc, t, lang }) {
     // Call grounded AI
     const aiAnswer = await askDocumentAI(query, doc);
     setIsTyping(false);
+
+    // Asynchronously log to Supabase
+    if (doc?.id) {
+      logQueryToSupabase(doc.id, query, aiAnswer, lang, user?.id);
+    }
 
     const aiMsgId = 'm-ai-' + Date.now();
     setMessages([

@@ -1,4 +1,29 @@
 // LorryMitra AI - Document Intelligence & Voice Service
+import { supabase } from '../utils/supabase';
+
+/**
+ * Logs question & answer query to Supabase
+ */
+export async function logQueryToSupabase(documentId, question, answer, lang = 'ml', userId = null) {
+  if (!supabase) return null;
+  try {
+    const payload = {
+      document_id: (documentId && documentId.includes('-') && documentId.length > 20) ? documentId : null,
+      user_id: userId || undefined,
+      question,
+      answer,
+      language: lang,
+      created_at: new Date().toISOString()
+    };
+    const { data, error } = await supabase.from('queries').insert(payload);
+    if (error) console.warn('Supabase query log note:', error.message);
+    return data;
+  } catch (err) {
+    console.warn('Query log skipped:', err);
+    return null;
+  }
+}
+
 
 // Fallback speech synthesizer helper
 let currentUtterance = null;

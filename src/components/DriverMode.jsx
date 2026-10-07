@@ -15,9 +15,9 @@ import {
   PhoneCall,
   Navigation
 } from 'lucide-react';
-import { askDocumentAI, speakText, stopSpeech, startVoiceRecognition } from '../services/aiService';
+import { askDocumentAI, speakText, stopSpeech, startVoiceRecognition, logQueryToSupabase } from '../services/aiService';
 
-export function DriverMode({ doc, t, lang, onExitDriverMode }) {
+export function DriverMode({ doc, t, lang, onExitDriverMode, user }) {
   const [isListening, setIsListening] = useState(false);
   const [currentQuery, setCurrentQuery] = useState('');
   const [aiResponse, setAiResponse] = useState('');
@@ -44,6 +44,10 @@ export function DriverMode({ doc, t, lang, onExitDriverMode }) {
     const response = await askDocumentAI(questionText, doc);
     setIsThinking(false);
     setAiResponse(response);
+
+    if (doc?.id) {
+      logQueryToSupabase(doc.id, questionText, response, lang, user?.id);
+    }
 
     // Automatically speak the response in Malayalam out loud
     setIsSpeakingAudio(true);
@@ -122,9 +126,16 @@ export function DriverMode({ doc, t, lang, onExitDriverMode }) {
             </div>
           </div>
 
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono">
-            {doc.documentType.split(' ')[0]}
-          </span>
+          <div className="flex items-center space-x-2">
+            {doc.isDemoPrimary && (
+              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-400 text-slate-950 font-mono">
+                Demo Data
+              </span>
+            )}
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono">
+              {doc.documentType.split(' ')[0]}
+            </span>
+          </div>
         </div>
 
         {/* Route Stack */}

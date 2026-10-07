@@ -112,6 +112,11 @@ export function DocumentHistory({ documents, activeDoc, onSelectDoc, t, lang }) 
                       <span className="text-xs font-mono text-slate-400">
                         #{doc.documentNumber}
                       </span>
+                      {doc.isDemoPrimary && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 font-mono">
+                          Demo Data
+                        </span>
+                      )}
                     </div>
 
                     <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
@@ -126,8 +131,8 @@ export function DocumentHistory({ documents, activeDoc, onSelectDoc, t, lang }) 
                       </span>
                     </div>
 
-                    <div className="mt-1 text-[11px] text-slate-400">
-                      തീയതി: {doc.documentDate} • {doc.transporter}
+                    <div className="mt-1 text-[11px] text-slate-500 font-ml">
+                      തീയതി: {doc.documentDate} • സാധുത (Expiry): <span className="font-medium text-slate-700">{doc.validityPeriod}</span>
                     </div>
                   </div>
                 </div>

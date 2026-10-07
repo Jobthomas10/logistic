@@ -191,6 +191,39 @@ export function DeliveryCard({ doc, t, lang }) {
 
       </div>
 
+      {/* Supabase Delivery Status Tracker (Section 15) */}
+      <div className="pt-4 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+          <div>
+            <h4 className="text-sm font-bold text-slate-900 font-ml">
+              ഡെലിവറി സ്റ്റാറ്റസ് (Delivery Status Tracking)
+            </h4>
+            <p className="text-xs text-slate-500 font-ml">
+              വാഹനം: <span className="font-mono font-bold text-slate-700">{doc.vehicleNumber}</span> • ചരക്ക്: {doc.cargoDescription?.split('(')[0]}
+            </p>
+          </div>
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+            Synced with Supabase
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold">
+          {[
+            { id: 'Pending', label: 'Pending (കാത്തിരിക്കുന്നു)', color: 'bg-amber-100 text-amber-800 border-amber-300' },
+            { id: 'In Transit', label: 'In Transit (യാത്രയിൽ)', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+            { id: 'Delivered', label: 'Delivered (എത്തിച്ചു)', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
+            { id: 'Cancelled', label: 'Cancelled (റദ്ദാക്കി)', color: 'bg-rose-100 text-rose-800 border-rose-300' },
+          ].map((st) => (
+            <div
+              key={st.id}
+              className={`p-3 rounded-xl border text-center transition-all ${st.color} shadow-2xs`}
+            >
+              <span className="block font-ml">{st.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
