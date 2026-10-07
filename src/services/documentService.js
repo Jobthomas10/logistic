@@ -120,11 +120,12 @@ export async function saveDocument(docData, userId = null) {
   if (!supabase) return null;
 
   try {
+    const isUuid = (val) => typeof val === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
     const validityStatus = computeValidityStatus(docData.validityPeriod || docData.expiry_date);
 
     const record = {
-      id: docData.id && docData.id.includes('-') && docData.id.length > 20 ? docData.id : undefined,
-      user_id: userId || undefined,
+      id: isUuid(docData.id) ? docData.id : undefined,
+      user_id: isUuid(userId) ? userId : undefined,
       document_type: docData.documentType || 'E-Way Bill',
       document_number: docData.documentNumber || null,
       vehicle_number: docData.vehicleNumber || null,

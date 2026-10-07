@@ -121,9 +121,15 @@ export function App() {
     try {
       const userDocs = await fetchUserDocuments(userId);
       if (userDocs && userDocs.length > 0) {
-        // User has real documents! Merge or display user documents
-        setDocuments(userDocs);
-        setActiveDoc(userDocs[0]);
+        // Filter out legacy dummy mock documents if any (Coconut oil, Willingdon island, etc.)
+        const validDocs = userDocs.filter(d => 
+          !d.cargoDescription?.toLowerCase().includes('coconut oil') &&
+          !d.pickupDetailedAddress?.toLowerCase().includes('willingdon island') &&
+          d.vehicleNumber !== 'KL-07-CB-9081'
+        );
+        const merged = [...validDocs, ...sampleDocuments];
+        setDocuments(merged);
+        setActiveDoc(merged[0]);
       } else {
         // Retain demo documents as fallback
         setDocuments(sampleDocuments);

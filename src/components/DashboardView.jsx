@@ -20,6 +20,7 @@ import {
 import { MalayalamSummary } from './MalayalamSummary';
 import { ExtractionResult } from './ExtractionResult';
 import { WarningCard } from './WarningCard';
+import { RouteMap } from './RouteMap';
 
 export function DashboardView({
   activeDoc,
@@ -223,6 +224,14 @@ export function DashboardView({
         </div>
 
       </div>
+
+      {/* 4. INTERACTIVE OPENSTREETMAP ROUTE MAP (Source to Destination) */}
+      <RouteMap 
+        doc={activeDoc} 
+        t={t} 
+        lang={lang} 
+        height="h-[380px]" 
+      />
 
       {/* 5. SIMPLE MALAYALAM EXPLANATION EMBEDDED IN DASHBOARD */}
       <MalayalamSummary 

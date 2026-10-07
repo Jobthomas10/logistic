@@ -2,8 +2,104 @@
 
 export const sampleDocuments = [
   {
-    id: "ewb-2026-001",
+    id: "ftl-2026-0456",
     isDemoPrimary: true,
+    title: "Consignment Note: Electrical Equipment (Kochi ➔ Bengaluru)",
+    documentType: "Consignment Note (LR)",
+    documentNumber: "FTL/2026/10/0456",
+    documentDate: "05-10-2026",
+    vehicleNumber: "KL 07 AB 1234",
+    vehicleModel: "Tata / Ashok Leyland Goods Carrier",
+    
+    // Route & Location
+    pickupLocation: "Kochi, Kerala - 682024",
+    pickupDetailedAddress: "ABC Manufacturers, Plot No. A-12, Industrial Area, Edayar, Kochi - 682024, Kerala",
+    deliveryLocation: "Bengaluru, Karnataka - 560058",
+    deliveryDetailedAddress: "XYZ Retail Pvt Ltd, #45, Peenya Industrial Area, Bengaluru - 560058, Karnataka",
+    distanceKm: 545,
+    approxDrivingTime: "11 hrs 30 mins",
+    
+    // Parties
+    consignor: "ABC MANUFACTURERS",
+    consignorGstin: "32AABCA1234A1Z5",
+    consignorPhone: "+91 99610 74123",
+    consignorContactPerson: "Anil Kumar (Consignor)",
+    
+    consignee: "XYZ RETAIL PVT LTD",
+    consigneeGstin: "29BBCCX5678B1Z3",
+    consigneePhone: "+91 98470 12345",
+    consigneeContactPerson: "Receiving Incharge (Peenya Wholesale)",
+    
+    // Cargo Details
+    cargoDescription: "Electrical Equipment (Distribution Panel, Control Switches, Cables & Accessories)",
+    cargoCategory: "Electrical Equipment & Switchgear",
+    hsnCode: "8537 / 8536 / 8544",
+    quantity: "23 packages (305 PCS)",
+    weight: "500 KG",
+    invoiceValue: "₹1,50,000.00",
+    taxAmount: "₹27,000 (18% IGST - Total: ₹1,77,000.00)",
+    
+    // Transport Details
+    transporter: "KERALA FREIGHT CARRIERS (TC: KL01TC1234)",
+    transporterId: "32AAACK7890C1Z1",
+    driverName: "Rajesh Kumar",
+    driverPhone: "+91 99610 74123",
+    driverLicense: "LR No: KFC/7890 (LR Date: 05-10-2026)",
+    
+    // Validity & Compliance
+    validityPeriod: "05-10-2026 (Consignment Note KFC/7890)",
+    validityStatus: "VALID",
+    validityRemainingHours: 72,
+    
+    // Instructions & Warnings
+    deliveryInstructions: "Material received in good condition. Handle with care.",
+    fileUrl: "/fasttrack_consignment_note.jpg",
+    warnings: [
+      {
+        id: "w-ftl-1",
+        level: "VALID",
+        titleMl: "കൺസൈൻമെന്റ് നോട്ട് സാധുതയുള്ളതാണ് (Valid)",
+        titleEn: "Consignment Note is Valid",
+        descMl: "വാഹന നമ്പർ KL 07 AB 1234, ഇൻവോയ്സ് നമ്പർ INV-2026-10-001 എന്നിവ രേഖകളിൽ കൃത്യമാണ്.",
+        descEn: "Valid consignment note with registered vehicle KL 07 AB 1234 and invoice INV-2026-10-001."
+      },
+      {
+        id: "w-ftl-2",
+        level: "INFO",
+        titleMl: "ഇലക്ട്രിക്കൽ ഉപകരണങ്ങൾ (Handle with Care)",
+        titleEn: "Electrical Equipment - Fragile",
+        descMl: "ഡിസ്ട്രിബ്യൂഷൻ പാനലുകളും കൺട്രോൾ സ്വിച്ചുകളും ഉള്ളതിനാൽ ശ്രദ്ധയോടെ കൈകാര്യം ചെയ്യുക.",
+        descEn: "Distribution panels and sensitive control switches. Handle with care."
+      }
+    ],
+
+    malayalamSummary: {
+      headline: "ഈ രേഖയിൽ പ്രധാനപ്പെട്ട കാര്യങ്ങൾ",
+      cargoMl: "500 കിലോ ഇലക്ട്രിക്കൽ ഉപകരണങ്ങൾ (ഡിസ്ട്രിബ്യൂഷൻ പാനൽ, കൺട്രോൾ സ്വിച്ചുകൾ, കേബിളുകൾ - 23 പാക്കറ്റുകൾ)",
+      pickupMl: "കൊച്ചി (എടയാർ ഇൻഡസ്ട്രിയൽ ഏരിയ, ABC Manufacturers)",
+      dropMl: "ബെംഗളൂരു (പീനിയ ഇൻഡസ്ട്രിയൽ ഏരിയ, XYZ Retail Pvt Ltd)",
+      vehicleMl: "KL 07 AB 1234",
+      validityMl: "05-10-2026 (കൺസൈൻമെന്റ് നോട്ട് KFC/7890)",
+      attentionMl: "സാധനങ്ങൾ ശ്രദ്ധയോടെ കൈകാര്യം ചെയ്യുക (Handle with care). ഡ്രൈവർ: രാജേഷ് കുമാർ (99610 74123).",
+      audioSpeechText: "ഇത് കൊച്ചിയിൽ നിന്ന് ബെംഗളൂരുവിലേക്ക് കൊണ്ടുപോകുന്ന 500 കിലോ ഇലക്ട്രിക്കൽ ഉപകരണങ്ങളുടെ കൺസൈൻമെന്റ് നോട്ട് ആണ്. വാഹനം KL 07 AB 1234. ഡ്രൈവർ രാജേഷ് കുമാർ. സാധനങ്ങൾ ശ്രദ്ധയോടെ കൈകാര്യം ചെയ്യുക."
+    },
+
+    verifiedFacts: {
+      pickup: "കൊച്ചി, എടയാർ ഇൻഡസ്ട്രിയൽ ഏരിയ (ABC Manufacturers)",
+      delivery: "ബെംഗളൂരു, പീനിയ ഇൻഡസ്ട്രിയൽ ഏരിയ (XYZ Retail Pvt Ltd)",
+      cargo: "500 kg ഇലക്ട്രിക്കൽ ഉപകരണങ്ങൾ (ഡിസ്ട്രിബ്യൂഷൻ പാനൽ, കൺട്രോൾ സ്വിച്ചുകൾ, കേബിളുകൾ - 305 PCS)",
+      weight: "500 KG",
+      quantity: "23 packages (305 PCS)",
+      vehicle: "KL 07 AB 1234",
+      value: "₹1,50,000.00 (Total with IGST: ₹1,77,000.00)",
+      expiry: "05-10-2026 (Consignment Note KFC/7890)",
+      consignee: "ബെംഗളൂരുവിലെ XYZ Retail Pvt Ltd (#45, Peenya Industrial Area)",
+      consignor: "കൊച്ചിയിലെ ABC Manufacturers (Edayar Industrial Area)"
+    }
+  },
+  {
+    id: "ewb-2026-001",
+    isDemoPrimary: false,
     title: "E-Way Bill: Tiles (Ernakulam ➔ Kozhikode)",
     documentType: "E-Way Bill (EWB-01)",
     documentNumber: "2410-9823-4512",
@@ -288,6 +384,93 @@ export const sampleDocuments = [
       expiry: "ഈ രേഖ കാലഹരണപ്പെട്ടു. ഇന്നലെ ഒക്ടോബർ 6-ന് കാലാവധി കഴിഞ്ഞു.",
       consignee: "തൃശ്ശൂരിലെ Thrissur Builders Consortium",
       consignor: "ആലുവയിലെ Kerala Steel & Hardware"
+    }
+  },
+  {
+    id: "ewb-2024-pune-chennai",
+    isDemoPrimary: false,
+    title: "E-Way Bill: Wall Tiles (Pune ➔ Chennai)",
+    documentType: "E-Way Bill (EWB-01)",
+    documentNumber: "2891 4736 9052",
+    documentDate: "12-Nov-2024 02:15 PM",
+    vehicleNumber: "MH-12-CD-9876",
+    vehicleModel: "Heavy Commercial Road Vehicle",
+    
+    // Route & Location
+    pickupLocation: "Pune, Maharashtra",
+    pickupDetailedAddress: "Horizon Tiles & Ceramics Ltd, Survey No. 88, MIDC Industrial Area, Pune - 411019, Maharashtra",
+    deliveryLocation: "Chennai, Tamil Nadu",
+    deliveryDetailedAddress: "Southern Trading Co., 22/7, Anna Salai, Chennai - 600002, Tamil Nadu",
+    distanceKm: 1180,
+    approxDrivingTime: "22 hrs 30 mins",
+    
+    // Parties
+    consignor: "Horizon Tiles & Ceramics Ltd",
+    consignorGstin: "27LMNOP4567Q1R8",
+    consignorPhone: null,
+    consignorContactPerson: "Dispatch Officer (Pune MIDC)",
+    
+    consignee: "Southern Trading Co.",
+    consigneeGstin: "33UVWXY9012A3B4",
+    consigneePhone: null,
+    consigneeContactPerson: "Receiving Manager (Chennai)",
+    
+    // Cargo Details
+    cargoDescription: "Porcelain Wall Tiles (HSN: 6908)",
+    cargoCategory: "Ceramic & Construction Materials",
+    hsnCode: "6908",
+    quantity: "120 Boxes",
+    weight: "1,440 kg",
+    invoiceValue: "₹1,45,500.00",
+    taxAmount: "As per Tax Invoice INV-2024-8876",
+    
+    // Transport Details
+    transporter: "Deccan Logistics Pvt Ltd",
+    transporterId: "27TRANS3344K5L6",
+    driverName: "Road Freight Driver",
+    driverPhone: "+91 98450 11223",
+    driverLicense: "MH1220190008892",
+    
+    // Validity & Compliance
+    validityPeriod: "13-Nov-2024 11:59 PM",
+    validityStatus: "EXPIRED",
+    validityRemainingHours: 0,
+    
+    // Instructions & Warnings
+    deliveryInstructions: "Handle fragile wall tiles with care. Keep upright and dry. Hand over invoice copy upon receipt signature.",
+    warnings: [
+      {
+        id: "w-401",
+        level: "DANGER",
+        titleMl: "ഇ-വേ ബിൽ കാലാവധി കഴിഞ്ഞതാണ് (Expired)!",
+        titleEn: "E-Way Bill has Expired!",
+        descMl: "ഈ ഇ-വേ ബില്ലിന്റെ കാലാവധി 2024 നവംബർ 13-ന് രാത്രി 11:59-ന് കഴിഞ്ഞതാണ്. പുതിയ സാധുവായ ഇ-വേ ബിൽ ഇല്ലാതെ യാത്ര ചെയ്യരുത്.",
+        descEn: "Expired on 13-Nov-2024. High risk of checkpost detention without bill extension."
+      }
+    ],
+
+    malayalamSummary: {
+      headline: "ഈ രേഖയിൽ പ്രധാനപ്പെട്ട കാര്യങ്ങൾ",
+      cargoMl: "120 ബോക്സ് പോർസലൈൻ വാൾ ടൈൽസ് (Porcelain Wall Tiles)",
+      pickupMl: "പൂനെ, മഹാരാഷ്ട്ര (Horizon Tiles & Ceramics Ltd)",
+      dropMl: "ചെന്നൈ, തമിഴ്നാട് (Southern Trading Co.)",
+      vehicleMl: "MH-12-CD-9876",
+      validityMl: "കാലഹരണപ്പെട്ടു (13-Nov-2024 11:59 PM)",
+      attentionMl: "അതീവ ശ്രദ്ധ: ഈ ഇ-വേ ബില്ലിന്റെ കാലാവധി 2024 നവംബർ 13-ന് കഴിഞ്ഞതാണ്. വാഹനം പുറപ്പെടുന്നതിന് മുൻപ് സാധുതയുള്ള പുതിയ രേഖ വാങ്ങുക.",
+      audioSpeechText: "ശ്രദ്ധിക്കുക! ഈ ഇ-വേ ബില്ലിൽ പൂനെയിലെ ഹൊറൈസൺ ടൈൽസിൽ നിന്ന് ചെന്നൈയിലെ സതേൺ ട്രേഡിംഗ് കമ്പനിയിലേക്ക് കൊണ്ടുപോകാനുള്ള 120 ബോക്സ് വാൾ ടൈൽസാണുള്ളത്. വാഹന നമ്പർ MH-12-CD-9876 ആണ്. ശ്രദ്ധിക്കുക, ഈ ബില്ലിന്റെ കാലാവധി കഴിഞ്ഞതാണ്."
+    },
+
+    verifiedFacts: {
+      pickup: "പൂനെ, മഹാരാഷ്ട്ര (Horizon Tiles & Ceramics Ltd)",
+      delivery: "ചെന്നൈ, തമിഴ്നാട് (Southern Trading Co.)",
+      cargo: "Porcelain Wall Tiles (120 Boxes)",
+      weight: "1,440 kg",
+      quantity: "120 Boxes",
+      vehicle: "MH-12-CD-9876",
+      value: "₹1,45,500.00",
+      expiry: "13-Nov-2024 11:59 PM (Expired)",
+      consignee: "Southern Trading Co., Chennai",
+      consignor: "Horizon Tiles & Ceramics Ltd, Pune"
     }
   }
 ];

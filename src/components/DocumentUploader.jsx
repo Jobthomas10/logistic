@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { sampleDocuments } from '../data/sampleDocuments';
 import { validateDocumentFile, uploadDocumentFile, saveDocument } from '../services/documentService';
+import { extractLogisticsDocumentWithAI } from '../services/aiService';
 
 export function DocumentUploader({ onDocumentProcessed, t, lang, user }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -44,88 +45,34 @@ export function DocumentUploader({ onDocumentProcessed, t, lang, user }) {
     setCurrentStep(1); // Step 1: Reading document
 
     try {
-      // Step 1: Upload to Supabase Storage
-      const { filePath, fileUrl, error: uploadErr } = await uploadDocumentFile(file, user?.id || 'driver');
+      // Step 1: Upload to Supabase Storage (async / non-blocking)
+      const storagePromise = uploadDocumentFile(file, user?.id || 'driver');
+
+      // Step 2: Extract real document details using Multimodal AI
+      setCurrentStep(2); // Step 2: Extracting info
+      const extractedDoc = await extractLogisticsDocumentWithAI(file);
+
+      // Step 3: Logistics analysis
+      setCurrentStep(3); // Step 3: Understanding logistics details
+      const { filePath, fileUrl, error: uploadErr } = await storagePromise;
       if (uploadErr) {
         console.warn('Storage upload note:', uploadErr);
       }
 
-      // Step 2: Create initial document record with status: 'processing'
-      setCurrentStep(2); // Step 2: Extracting info
-      const tempId = 'doc-' + Date.now();
-      
-      // Determine document type based on filename hints or default to E-Way Bill
-      const lowerName = file.name.toLowerCase();
-      let docType = 'E-Way Bill (EWB-01)';
-      if (lowerName.includes('invoice') || lowerName.includes('bill')) docType = 'Tax Invoice (GST)';
-      else if (lowerName.includes('lr') || lowerName.includes('consignment')) docType = 'Consignment Note (LR)';
-      else if (lowerName.includes('challan') || lowerName.includes('delivery')) docType = 'Delivery Challan';
-
-      await new Promise(r => setTimeout(r, 650));
-      setCurrentStep(3); // Step 3: Understanding logistics details
-
-      // Build realistic structured document data based on the uploaded file
-      const newDoc = {
-        id: tempId,
-        isDemoPrimary: false,
-        title: `${docType}: ${file.name}`,
-        documentType: docType,
-        documentNumber: `${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`,
-        documentDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }),
-        vehicleNumber: "KL-07-CB-9081",
-        vehicleModel: "BharatBenz 1617 Medium Goods Vehicle",
-        pickupLocation: "Kochi, Kerala",
-        pickupDetailedAddress: "Cochin Cargo Logistics Yard, Willingdon Island, Kochi - 682003",
-        deliveryLocation: "Kozhikode, Kerala",
-        deliveryDetailedAddress: "Calicut Central Goods Terminus, Cherootty Road, Kozhikode - 673001",
-        distanceKm: 190,
-        approxDrivingTime: "4 hrs 50 mins",
-        consignor: "Kerala Spices & Provisions Ltd",
-        consignee: "Malabar Wholesale Distributors",
-        cargoDescription: "Processed Food Cargo & Coconut Oil",
-        quantity: "80 cartons",
-        weight: "850 kg",
-        invoiceValue: "₹1,12,000",
-        transporter: "Kairali Rapid Freight Express",
-        validityPeriod: "10 October 2026, 11:59 PM",
-        validityStatus: "VALID",
-        validityRemainingHours: 48,
-        deliveryInstructions: "Deliver before 6:00 PM. Call godown manager 45 mins prior to reaching bypass junction.",
-        filePath: filePath || null,
-        fileUrl: fileUrl || null,
-        status: 'processing',
-        malayalamSummary: {
-          headline: "ഈ രേഖയിൽ പ്രധാനപ്പെട്ട കാര്യങ്ങൾ",
-          cargoMl: "850 കിലോ ഭക്ഷ്യവസ്തുക്കളും വെളിച്ചെണ്ണയും (80 കാർട്ടൺ)",
-          pickupMl: "കൊച്ചി (വില്ലിംഗ്ഡൺ ഐലൻഡ്)",
-          dropMl: "കോഴിക്കോട് (ചെറൂട്ടി റോഡ്)",
-          vehicleMl: "KL-07-CB-9081",
-          validityMl: "2026 ഒക്ടോബർ 10 വരെ സാധുതയുണ്ട്",
-          attentionMl: "ബില്ലിന്റെ സാധുത അവസാനിക്കുന്നതിന് മുൻപ് വൈകിട്ട് 6 മണിക്ക് മുൻപായി ഗോഡൗണിൽ എത്തിക്കുക.",
-          audioSpeechText: "ഇത് കൊച്ചിയിൽ നിന്ന് കോഴിക്കോട്ടേക്ക് കൊണ്ടുപോകുന്ന എണ്ണൂറ്റമ്പത് കിലോ ചരക്കിന്റെ രേഖയാണ്. വാഹനം KL 07 CB 9081. സാധുത 2026 ഒക്ടോബർ 10 വരെ ഉണ്ട്."
-        },
-        verifiedFacts: {
-          pickup: "കൊച്ചി, വില്ലിംഗ്ഡൺ ഐലൻഡ്",
-          delivery: "കോഴിക്കോട്, ചെറൂട്ടി റോഡ്",
-          cargo: "850 kg ഭക്ഷ്യവസ്തുക്കൾ",
-          weight: "850 kg",
-          quantity: "80 കാർട്ടൺ",
-          vehicle: "KL-07-CB-9081",
-          expiry: "2026 ഒക്ടോബർ 10 വരെ valid ആണ്."
-        }
-      };
-
-      await new Promise(r => setTimeout(r, 650));
+      // Step 4: Malayalam summary completion
       setCurrentStep(4); // Step 4: Preparing Malayalam explanation
+      await new Promise(r => setTimeout(r, 500));
 
-      // Step 3: Save completed record to Supabase
-      newDoc.status = 'completed';
-      const savedDoc = await saveDocument(newDoc, user?.id);
+      extractedDoc.filePath = filePath || null;
+      extractedDoc.fileUrl = fileUrl || null;
+      extractedDoc.status = 'completed';
 
-      await new Promise(r => setTimeout(r, 600));
+      // Save real document record in Supabase
+      const savedDoc = await saveDocument(extractedDoc, user?.id);
+
       setProcessing(false);
       setCurrentStep(0);
-      onDocumentProcessed(savedDoc || newDoc);
+      onDocumentProcessed(savedDoc || extractedDoc);
     } catch (err) {
       console.error('Document processing error:', err);
       setProcessing(false);
@@ -284,7 +231,7 @@ export function DocumentUploader({ onDocumentProcessed, t, lang, user }) {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
               {sampleDocuments.map((doc, idx) => (
                 <button
                   key={doc.id}
@@ -303,7 +250,7 @@ export function DocumentUploader({ onDocumentProcessed, t, lang, user }) {
                     </div>
                     <div className="truncate">
                       <p className="text-xs font-bold text-slate-900 truncate">
-                        {idx === 0 ? t.sample1Name : idx === 1 ? t.sample2Name : t.sample3Name}
+                        {idx === 0 ? t.sample1Name : idx === 1 ? t.sample2Name : idx === 2 ? t.sample3Name : idx === 3 ? t.sample4Name : t.sample5Name || doc.title}
                       </p>
                       <p className="text-[11px] text-slate-500 font-mono">
                         {doc.vehicleNumber}

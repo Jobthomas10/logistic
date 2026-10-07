@@ -12,6 +12,7 @@ import {
   Clock,
   Compass
 } from 'lucide-react';
+import { RouteMap } from './RouteMap';
 
 export function DeliveryCard({ doc, t, lang }) {
   const [copiedSection, setCopiedSection] = useState(null);
@@ -56,6 +57,9 @@ export function DeliveryCard({ doc, t, lang }) {
           <span className="font-ml">{t.navigateGoogleMaps}</span>
         </button>
       </div>
+
+      {/* Interactive OpenStreetMap Route from Document */}
+      <RouteMap doc={doc} t={t} lang={lang} height="h-[400px]" />
 
       {/* Side-by-Side Pickup & Delivery Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

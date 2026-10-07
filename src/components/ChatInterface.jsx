@@ -33,6 +33,19 @@ export function ChatInterface({ doc, t, lang, user }) {
   const messagesEndRef = useRef(null);
   const chatInputRef = useRef(null);
 
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'm-init-' + (doc?.id || 'default'),
+        sender: 'ai',
+        text: lang === 'ml' 
+          ? `നമസ്കാരം! ഞാൻ ലോറിമിത്ര AI. ${doc?.vehicleNumber ? `വാഹനം ${doc.vehicleNumber}` : 'ഈ രേഖയെ'}ക്കുറിച്ച് എന്തും ചോദിക്കാം (${doc?.cargoDescription || ''}).`
+          : `Hello! I am LorryMitra AI. You can ask me anything about this ${doc?.documentType || 'document'} (${doc?.vehicleNumber || ''}). I answer strictly using factual document data.`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ]);
+  }, [doc?.id, lang]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
